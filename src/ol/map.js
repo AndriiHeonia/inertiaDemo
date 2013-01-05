@@ -1108,7 +1108,7 @@ ol.Map.createInteractions_ = function(mapOptions) {
       mapOptions.dragPan : true;
   if (dragPan) {
     interactions.push(
-        new ol.interaction.DragPan(ol.interaction.condition.noModifierKeys));
+        new ol.interaction.DragPanInertia(ol.interaction.condition.noModifierKeys));
   }
 
   var keyboard = goog.isDef(mapOptions.keyboard) ?
