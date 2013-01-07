@@ -1,4 +1,4 @@
-goog.provide('ol.polyfil.requestanimationframe');
+goog.provide('ol.polyfill.requestanimationframe');
 
 (function() {
     var lastTime = 0;

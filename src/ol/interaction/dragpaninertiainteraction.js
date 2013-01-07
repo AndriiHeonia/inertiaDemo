@@ -1,7 +1,7 @@
 goog.provide('ol.interaction.DragPanInertia');
 
 goog.require('ol.interaction.DragPan');
-goog.require('ol.util.anim');
+goog.require('ol.polyfill.requestanimationframe');
 
 
 /**
@@ -21,8 +21,8 @@ goog.inherits(ol.interaction.DragPanInertia, ol.interaction.DragPan);
  * @inheritDoc
  */
 ol.interaction.DragPanInertia.prototype.handleDragStart = function(mapBrowserEvent) {
-
     ol.interaction.DragPan.prototype.handleDragStart.call(this, mapBrowserEvent);
+    //this.listen(mapBrowserEvent);
     this._dragStartTime = new Date();
     return true;
 
@@ -69,12 +69,22 @@ ol.interaction.DragPanInertia.prototype.inertiaMove = function() {
     if (!(Math.abs(this._impulse.x) <= ol.interaction.DragPanInertia.STOP_IMPULSE &&
           Math.abs(this._impulse.y) <= ol.interaction.DragPanInertia.STOP_IMPULSE)) {
 
-      ol.util.anim.requestAnimFrame(function() {
+      window.requestAnimationFrame(function() {
         self.inertiaMove.call(self);
       });
     
     }
 };
+
+ol.interaction.DragPanInertia.prototype.listen = function(mapBrowserEvent) {
+  var eventType = ol.BrowserFeature.HAS_TOUCH ?
+      goog.events.EventType.TOUCHEND : goog.events.EventType.CLICK;
+
+  goog.events.listen(
+    mapBrowserEvent.map.getOverlayContainer(),
+    eventType, this.updatePixelPosition_,
+    false, this);
+}
 
 /**
  * @const {number}
