@@ -1,1 +1,1 @@
-OpenLayers3 dragging inertia [demo](http://htmlpreview.github.com/?https://github.com/AndreyGeonya/inertiaDemo/blob/master/index.html)
+OpenLayers 3 dragging inertia [demo](http://htmlpreview.github.com/?https://github.com/AndreyGeonya/inertiaDemo/blob/master/index.html)
