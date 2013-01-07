@@ -89,4 +89,4 @@ ol.interaction.DragPanInertia.SLOWING_SPEED = 1.06;
 /**
  * @const {number}
  */
-ol.interaction.DragPanInertia.STOP_IMPULSE = 400;
+ol.interaction.DragPanInertia.STOP_IMPULSE = 500;

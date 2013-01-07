@@ -4,8 +4,7 @@ goog.provide('ol.util.anim');
 /**
  * @constructor
  */
-ol.util.anim = function() {
-};
+ol.util.anim = function() {};
 
 
 /**
