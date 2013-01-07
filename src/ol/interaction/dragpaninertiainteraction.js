@@ -1,6 +1,7 @@
 goog.provide('ol.interaction.DragPanInertia');
 
 goog.require('ol.interaction.DragPan');
+goog.require('ol.util.anim');
 
 
 /**
@@ -11,17 +12,6 @@ goog.require('ol.interaction.DragPan');
 ol.interaction.DragPanInertia = function(condition) {
 
   goog.base(this, condition);
-
-  // requestAnimationFrame shim with setTimeout fallback
-  window.requestAnimFrame =
-            window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function( callback ){
-              window.setTimeout(callback, 1000 / 60);
-            };
 
 };
 
@@ -79,7 +69,7 @@ ol.interaction.DragPanInertia.prototype.inertiaMove = function() {
     if (!(Math.abs(this._impulse.x) <= ol.interaction.DragPanInertia.STOP_IMPULSE &&
           Math.abs(this._impulse.y) <= ol.interaction.DragPanInertia.STOP_IMPULSE)) {
 
-      window.requestAnimFrame(function() {
+      ol.util.anim.requestAnimFrame(function() {
         self.inertiaMove.call(self);
       });
     
@@ -89,12 +79,12 @@ ol.interaction.DragPanInertia.prototype.inertiaMove = function() {
 /**
  * @const {number}
  */
-ol.interaction.DragPanInertia.MASS = 300000;
+ol.interaction.DragPanInertia.MASS = 20000;
 
 /**
  * @const {number}
  */
-ol.interaction.DragPanInertia.SLOWING_SPEED = 1.1;
+ol.interaction.DragPanInertia.SLOWING_SPEED = 1.06;
 
 /**
  * @const {number}
