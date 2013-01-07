@@ -21,8 +21,8 @@ goog.inherits(ol.interaction.DragPanInertia, ol.interaction.DragPan);
  * @inheritDoc
  */
 ol.interaction.DragPanInertia.prototype.handleDragStart = function(mapBrowserEvent) {
+    
     ol.interaction.DragPan.prototype.handleDragStart.call(this, mapBrowserEvent);
-    //this.listen(mapBrowserEvent);
     this._dragStartTime = new Date();
     return true;
 
@@ -44,6 +44,14 @@ ol.interaction.DragPanInertia.prototype.handleDragEnd = function(mapBrowserEvent
   };
 
   this._map = mapBrowserEvent.map;
+
+  this._isStopNextFrame = false;
+
+  if (this._isListen !== true) {
+    this.listen();
+    this._isListen = true;
+  }
+
   this.inertiaMove();
 
 };
@@ -52,6 +60,7 @@ ol.interaction.DragPanInertia.prototype.handleDragEnd = function(mapBrowserEvent
  * Inertia after drag end
  */
 ol.interaction.DragPanInertia.prototype.inertiaMove = function() {
+
     var self = this;
     var curCenter = this._map.getCenter();
     var newCenter = new ol.Coordinate(
@@ -65,26 +74,46 @@ ol.interaction.DragPanInertia.prototype.inertiaMove = function() {
     this._impulse.x /= ol.interaction.DragPanInertia.SLOWING_SPEED;
     this._impulse.y /= ol.interaction.DragPanInertia.SLOWING_SPEED;
 
-    // if impulse isn't too small - move
-    if (!(Math.abs(this._impulse.x) <= ol.interaction.DragPanInertia.STOP_IMPULSE &&
-          Math.abs(this._impulse.y) <= ol.interaction.DragPanInertia.STOP_IMPULSE)) {
+    // if impulse isn't too small and hasn't be stoped - move
+    if (!this._isStopNextFrame &&
+        !(Math.abs(this._impulse.x) <= ol.interaction.DragPanInertia.STOP_IMPULSE &&
+          Math.abs(this._impulse.y) <= ol.interaction.DragPanInertia.STOP_IMPULSE )) {
 
       window.requestAnimationFrame(function() {
         self.inertiaMove.call(self);
       });
     
     }
+
 };
 
-ol.interaction.DragPanInertia.prototype.listen = function(mapBrowserEvent) {
-  var eventType = ol.BrowserFeature.HAS_TOUCH ?
-      goog.events.EventType.TOUCHEND : goog.events.EventType.CLICK;
+/**
+ * Stop inertia
+ */
+ol.interaction.DragPanInertia.prototype.stopInertiaMove = function() {
 
+  this._isStopNextFrame = true;
+
+};
+
+/**
+ * Add all event listenrs.
+ */
+ol.interaction.DragPanInertia.prototype.listen = function() {
+
+  var eventType = ol.BrowserFeature.HAS_TOUCH ?
+      goog.events.EventType.TOUCHEND : goog.events.EventType.MOUSEDOWN;
+
+  // mouse down
   goog.events.listen(
-    mapBrowserEvent.map.getOverlayContainer(),
-    eventType, this.updatePixelPosition_,
-    false, this);
-}
+    this._map.getViewport(),
+    eventType, this.stopInertiaMove, false, this);
+
+  // zoom changed
+  goog.events.listen(
+    this._map, ol.Object.getChangedEventType(ol.MapProperty.RESOLUTION),
+    this.stopInertiaMove, false, this);
+};
 
 /**
  * @const {number}
