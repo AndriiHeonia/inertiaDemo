@@ -41,7 +41,7 @@ goog.require('ol.TransformFunction');
 goog.require('ol.control.Attribution');
 goog.require('ol.control.Zoom');
 goog.require('ol.interaction.DblClickZoom');
-goog.require('ol.interaction.DragPan');
+goog.require('ol.interaction.DragPanInertia');
 goog.require('ol.interaction.DragRotate');
 goog.require('ol.interaction.DragZoom');
 goog.require('ol.interaction.Interaction');

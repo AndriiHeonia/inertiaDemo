@@ -4,9 +4,8 @@ goog.require('goog.debug.Logger.Level');
 goog.require('ol.Collection');
 goog.require('ol.Coordinate');
 goog.require('ol.Map');
-goog.require('ol.source.OpenStreetMap');
-goog.require('ol.interaction.DragPan');
-goog.require('ol.interaction.DragPanInertia');
+goog.require('ol.source.MapQuestOpenAerial');
+
 
 if (goog.DEBUG) {
   goog.debug.Console.autoInstall();
@@ -15,13 +14,11 @@ if (goog.DEBUG) {
 
 
 var layer = new ol.layer.TileLayer({
-  source: new ol.source.OpenStreetMap()
+  source: new ol.source.MapQuestOpenAerial()
 });
 var map = new ol.Map({
-  center: new ol.Coordinate(2, 57),
+  center: new ol.Coordinate(0, 0),
   layers: new ol.Collection([layer]),
   target: 'map',
-  zoom: 5
+  zoom: 2
 });
-
-goog.mixin(ol.interaction.DragPanInertia, ol.interaction.DragPan);
